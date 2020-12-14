@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBank
+namespace BankLibrary
 {
-    class InterestEarningAccount : BankAccount
+    public class InterestEarningAccount : BankAccount
     {
         public InterestEarningAccount(string name, decimal initialBalance) : base(name, initialBalance)
         {

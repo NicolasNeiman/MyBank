@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBank
+namespace BankLibrary
 {
-    class BankAccount
+    public class BankAccount
     {
         public string AccountNumber { get; }
 
@@ -97,7 +97,7 @@ namespace MyBank
                 allTransactions.Add(overdraftTransaction);
         }
 
-        protected virtual Transaction? CheckWithdrawalLimit(bool isOverDrawn)
+        protected virtual Transaction CheckWithdrawalLimit(bool isOverDrawn)
         {
             if (isOverDrawn)
             {

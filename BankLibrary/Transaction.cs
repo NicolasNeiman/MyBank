@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBank
+namespace BankLibrary
 {
-    class Transaction
+    public class Transaction
     {
         public decimal Amount { get; }
 

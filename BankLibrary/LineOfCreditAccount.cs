@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBank
+namespace BankLibrary
 {
-    class LineOfCreditAccount : BankAccount
+    public class LineOfCreditAccount : BankAccount
     {
         decimal CreditLimit { get; }
         public LineOfCreditAccount(string name, decimal initialAmount, decimal creditLimit) : base(name, initialAmount) 
@@ -25,7 +25,7 @@ namespace MyBank
             }
         }
 
-        protected override Transaction? CheckWithdrawalLimit(bool isOverDrawn)
+        protected override Transaction CheckWithdrawalLimit(bool isOverDrawn)
         {
             if( isOverDrawn )
             {

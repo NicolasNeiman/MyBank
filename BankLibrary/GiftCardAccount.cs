@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBank
+namespace BankLibrary
 {
-    class GiftCardAccount : BankAccount
+    public class GiftCardAccount : BankAccount
     {
         private decimal _monthlyDeposit = 0m;
         public GiftCardAccount(string name, decimal initialBalance, decimal monthlyDeposit = 0) : base(name, initialBalance)
