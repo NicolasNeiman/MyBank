@@ -6,21 +6,70 @@ namespace MyBank
     {
         static void Main(string[] args)
         {
-            var NicoAccount = new BankAccount("Nicolas", 1000);
-            Console.WriteLine($"Bank account Number : {NicoAccount.AccountNumber} belongs to : {NicoAccount.Owner} and current balance is {NicoAccount.Balance}");
-            NicoAccount.MakeDeposit(100);
-            Console.WriteLine($"{NicoAccount.Balance}");
-            NicoAccount.MakeWithdrawal(200);
-            Console.WriteLine($"{NicoAccount.Balance}");
+            IntroToClasses();
+
+            // <FirstTests>
+            var giftCard = new GiftCardAccount("gift card", 100, 50);
+            giftCard.MakeWithdrawal(20, "get expensive coffee");
+            giftCard.MakeWithdrawal(50, "buy groceries");
+            giftCard.PerformMonthEndTransactions();
+            // can make additional deposits:
+            giftCard.MakeDeposit(27.50m, "add some additional spending money");
+            Console.WriteLine(giftCard.GetAccountHistory());
+
+            var savings = new InterestEarningAccount("savings account", 10000);
+            savings.MakeDeposit(750, "save some money");
+            savings.MakeDeposit(1250, "Add more savings");
+            savings.MakeWithdrawal(250, "Needed to pay monthly bills");
+            savings.PerformMonthEndTransactions();
+            Console.WriteLine(savings.GetAccountHistory());
+            // </FirstTests>
+
+            // <TestLineOfCredit>
+            var lineOfCredit = new LineOfCreditAccount("line of credit", 0, 2000);
+            // How much is too much to borrow?
+            lineOfCredit.MakeWithdrawal(1000m, "Take out monthly advance");
+            lineOfCredit.MakeDeposit(50m, "Pay back small amount");
+            lineOfCredit.MakeWithdrawal(5000m, "Emergency funds for repairs");
+            lineOfCredit.MakeDeposit(150m, "Partial restoration on repairs");
+            lineOfCredit.PerformMonthEndTransactions();
+            Console.WriteLine(lineOfCredit.GetAccountHistory());
+            // </TestLineOfCredit>
+        }
+
+        private static void IntroToClasses()
+        {
+            var account = new BankAccount("<name>", 1000);
+            Console.WriteLine($"Account {account.AccountNumber} was created for {account.Owner} with {account.Balance} balance.");
+
+            account.MakeWithdrawal(500, "Rent payment");
+            Console.WriteLine(account.Balance);
+            account.MakeDeposit(100, "friend paid me back");
+            Console.WriteLine(account.Balance);
+
+            Console.WriteLine(account.GetAccountHistory());
+
+            // Test that the initial balances must be positive:
             try
             {
-                NicoAccount.MakeWithdrawal(1000);
+                var invalidAccount = new BankAccount("invalid", -55);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Console.WriteLine("Exception caught creating account with negative balance");
+                Console.WriteLine(e.ToString());
+            }
+
+            // Test for a negative balance
+            try
+            {
+                account.MakeWithdrawal(750, "Attempt to overdraw");
             }
             catch (InvalidOperationException e)
             {
+                Console.WriteLine("Exception caught trying to overdraw");
                 Console.WriteLine(e.ToString());
             }
-            Console.WriteLine(NicoAccount.GetAccountHistory());
         }
     }
 }

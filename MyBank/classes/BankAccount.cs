@@ -26,17 +26,25 @@ namespace MyBank
         public List<Transaction> allTransactions = new List<Transaction>();
 
         private static int seedBankAccountNumber = 1234567890;
-        public BankAccount(string owner, decimal initialBalance)
+
+        private readonly decimal minimumBalance;
+
+        public BankAccount(string owner, decimal initialBalance) : this(owner, initialBalance, 0) { }
+        public BankAccount(string owner, decimal initialBalance, decimal minimumBalance)
         {
             this.AccountNumber = seedBankAccountNumber.ToString();
             seedBankAccountNumber++;
             
             this.Owner = owner;
+            this.minimumBalance = minimumBalance;
 
-            MakeDeposit(
-                amount: initialBalance,
-                note: "Initial deposit at account creation"
-            );
+            if (initialBalance > 0)
+            {
+                MakeDeposit(
+                    amount: initialBalance,
+                    note: "Initial deposit at account creation"
+                );
+            }
         }
 
         public void MakeDeposit(decimal amount, string note = "")
@@ -67,11 +75,9 @@ namespace MyBank
             {
                 throw new ArgumentOutOfRangeException(nameof(amount), "Deposit amount should be greater than zero");
             }
+            // if the amount exceed the authorized amount the next line will raise an InvalidoperationException
+            var overdraftTransaction = CheckWithdrawalLimit(Balance - amount < minimumBalance);
 
-            if (amount > Balance)
-            {
-                throw new InvalidOperationException("The amount you are trying to withdraw is greater than the available balance");
-            }
             string withdrawNote = note;
             if (withdrawNote == "")
             {
@@ -85,6 +91,22 @@ namespace MyBank
             );
 
             allTransactions.Add(withdrawal);
+
+            // This never happen in the normal BankAccount
+            if (overdraftTransaction != null)
+                allTransactions.Add(overdraftTransaction);
+        }
+
+        protected virtual Transaction? CheckWithdrawalLimit(bool isOverDrawn)
+        {
+            if (isOverDrawn)
+            {
+                throw new InvalidOperationException("Can't proceed with this operation given your balance and minimum balance limit");
+            }
+            else
+            {
+                return default;
+            }
         }
 
         public string GetAccountHistory()
@@ -99,5 +121,7 @@ namespace MyBank
             }
             return report.ToString();
         }
+
+        public virtual void PerformMonthEndTransactions() { }
     }
 }
